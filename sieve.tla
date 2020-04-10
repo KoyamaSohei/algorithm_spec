@@ -5,11 +5,8 @@ CONSTANTS N
 
 Prime(p) == p > 1 /\ ~\E d \in 2..(p-1) : p % d = 0
 
-AllTRUE == [n \in 1..N |-> TRUE]
-ANSWER == [n \in 1..N |-> Prime(n)]
-
 (* --algorithm Eratosthenes
-variable isp = AllTRUE,k=2,i=0;
+variable isp = [n \in 1..N |-> TRUE],k=2,i=0;
 begin
 a:
 isp[1] := FALSE;
@@ -29,7 +26,7 @@ c:
 e:
 k := k+1;
 end while;
-assert isp = ANSWER;
+assert isp = [n \in 1..N |-> Prime(n)];
 end algorithm; *)
 \* BEGIN TRANSLATION
 VARIABLES isp, k, i, pc
@@ -37,7 +34,7 @@ VARIABLES isp, k, i, pc
 vars == << isp, k, i, pc >>
 
 Init == (* Global variables *)
-        /\ isp = AllTRUE
+        /\ isp = [n \in 1..N |-> TRUE]
         /\ k = 2
         /\ i = 0
         /\ pc = "a"
@@ -54,8 +51,8 @@ b == /\ pc = "b"
                            /\ i' = i
                       ELSE /\ i' = k+k
                            /\ pc' = "c"
-           ELSE /\ Assert(isp = ANSWER, 
-                          "Failure of assertion at line 32, column 1.")
+           ELSE /\ Assert(isp = [n \in 1..N |-> Prime(n)], 
+                          "Failure of assertion at line 29, column 1.")
                 /\ pc' = "Done"
                 /\ i' = i
      /\ UNCHANGED << isp, k >>
@@ -88,5 +85,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sat Apr 11 03:37:23 JST 2020 by koyamaso
+\* Last modified Sat Apr 11 03:40:36 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:47:11 JST 2020 by koyamaso
