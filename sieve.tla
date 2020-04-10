@@ -10,7 +10,7 @@ Prime(p) == Divisors(p) \ {1,p} = {}
 AllTRUE[n \in 1..N] == TRUE
 ANSWER[n \in 1..N] == IF n = 1 THEN FALSE ELSE Prime(n)
 
-(* --algorithm Euclid 
+(* --algorithm Eratosthenes
 variable isp = AllTRUE,k=2,i=0;
 begin
 a:
@@ -90,5 +90,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Apr 10 23:16:24 JST 2020 by koyamaso
+\* Last modified Fri Apr 10 23:17:26 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:47:11 JST 2020 by koyamaso
