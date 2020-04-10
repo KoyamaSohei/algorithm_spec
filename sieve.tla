@@ -5,8 +5,8 @@ CONSTANTS N
 
 Prime(p) == p > 1 /\ ~\E d \in 2..(p-1) : p % d = 0
 
-AllTRUE[n \in 1..N] == TRUE
-ANSWER[n \in 1..N] == Prime(n)
+AllTRUE == [n \in 1..N |-> TRUE]
+ANSWER == [n \in 1..N |-> Prime(n)]
 
 (* --algorithm Eratosthenes
 variable isp = AllTRUE,k=2,i=0;
@@ -88,5 +88,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sat Apr 11 03:34:27 JST 2020 by koyamaso
+\* Last modified Sat Apr 11 03:37:23 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:47:11 JST 2020 by koyamaso
