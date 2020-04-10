@@ -5,8 +5,7 @@ CONSTANTS N
 
 p | q == \E d \in 1..q : q = p * d
 Divisors(q) == {d \in 1..q : d | q}
-Maximum(S) == CHOOSE x \in S : \A y \in S : x >= y
-Prime(p) == Maximum(Divisors(p) \ {p}) = 1
+Prime(p) == Divisors(p) \ {1,p} = {}
 
 AllTRUE[n \in 1..N] == TRUE
 ANSWER[n \in 1..N] == IF n = 1 THEN FALSE ELSE Prime(n)
@@ -58,7 +57,7 @@ b == /\ pc = "b"
                       ELSE /\ i' = k+k
                            /\ pc' = "c"
            ELSE /\ Assert(isp = ANSWER, 
-                          "Failure of assertion at line 35, column 1.")
+                          "Failure of assertion at line 34, column 1.")
                 /\ pc' = "Done"
                 /\ i' = i
      /\ UNCHANGED << isp, k >>
@@ -91,5 +90,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Apr 10 22:22:36 JST 2020 by koyamaso
+\* Last modified Fri Apr 10 23:16:24 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:47:11 JST 2020 by koyamaso
