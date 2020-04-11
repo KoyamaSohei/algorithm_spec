@@ -12,17 +12,22 @@ Input == {<<x,y>> \in (0..N) \X (0..N) : x+y>0}
 (* --algorithm Euclid 
 variables xy \in Input,x=xy[1],y=xy[2];
 begin
-if x < y
-then
-  x := y || y := x;
+a:
+if x=0 \/ y=0 
+then 
+  y := 0;
+  goto e
 end if;
+b:
 while x # 0 do
   if x < y 
   then
     x := y || y := x;
   end if;
+  c:
   x := x - y;
 end while;
+e:
 assert y = GCD(xy[1],xy[2]);
 end algorithm; *)
 \* BEGIN TRANSLATION
@@ -34,40 +39,43 @@ Init == (* Global variables *)
         /\ xy \in Input
         /\ x = xy[1]
         /\ y = xy[2]
-        /\ pc = "Lbl_1"
+        /\ pc = "a"
 
-Lbl_1 == /\ pc = "Lbl_1"
-         /\ IF x < y
-               THEN /\ /\ x' = y
-                       /\ y' = x
-               ELSE /\ TRUE
-                    /\ UNCHANGED << x, y >>
-         /\ pc' = "Lbl_2"
-         /\ xy' = xy
+a == /\ pc = "a"
+     /\ IF x=0 \/ y=0
+           THEN /\ y' = 0
+                /\ pc' = "e"
+           ELSE /\ pc' = "b"
+                /\ y' = y
+     /\ UNCHANGED << xy, x >>
 
-Lbl_2 == /\ pc = "Lbl_2"
-         /\ IF x # 0
-               THEN /\ IF x < y
-                          THEN /\ /\ x' = y
-                                  /\ y' = x
-                          ELSE /\ TRUE
-                               /\ UNCHANGED << x, y >>
-                    /\ pc' = "Lbl_3"
-               ELSE /\ Assert(y = GCD(xy[1],xy[2]), 
-                              "Failure of assertion at line 26, column 1.")
-                    /\ pc' = "Done"
-                    /\ UNCHANGED << x, y >>
-         /\ xy' = xy
+b == /\ pc = "b"
+     /\ IF x # 0
+           THEN /\ IF x < y
+                      THEN /\ /\ x' = y
+                              /\ y' = x
+                      ELSE /\ TRUE
+                           /\ UNCHANGED << x, y >>
+                /\ pc' = "c"
+           ELSE /\ pc' = "e"
+                /\ UNCHANGED << x, y >>
+     /\ xy' = xy
 
-Lbl_3 == /\ pc = "Lbl_3"
-         /\ x' = x - y
-         /\ pc' = "Lbl_2"
-         /\ UNCHANGED << xy, y >>
+c == /\ pc = "c"
+     /\ x' = x - y
+     /\ pc' = "b"
+     /\ UNCHANGED << xy, y >>
+
+e == /\ pc = "e"
+     /\ Assert(y = GCD(xy[1],xy[2]), 
+               "Failure of assertion at line 31, column 1.")
+     /\ pc' = "Done"
+     /\ UNCHANGED << xy, x, y >>
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == pc = "Done" /\ UNCHANGED vars
 
-Next == Lbl_1 \/ Lbl_2 \/ Lbl_3
+Next == a \/ b \/ c \/ e
            \/ Terminating
 
 Spec == Init /\ [][Next]_vars
@@ -78,5 +86,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 12 04:46:06 JST 2020 by koyamaso
+\* Last modified Sun Apr 12 05:33:03 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:02:23 JST 2020 by koyamaso
