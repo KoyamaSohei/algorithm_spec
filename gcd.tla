@@ -25,7 +25,7 @@ while x # 0 do
     x := y || y := x;
   end if;
   c:
-  x := x - y;
+  x := x % y;
 end while;
 e:
 assert y = GCD(xy[1],xy[2]);
@@ -62,7 +62,7 @@ b == /\ pc = "b"
      /\ xy' = xy
 
 c == /\ pc = "c"
-     /\ x' = x - y
+     /\ x' = x % y
      /\ pc' = "b"
      /\ UNCHANGED << xy, y >>
 
@@ -86,5 +86,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 12 05:33:03 JST 2020 by koyamaso
+\* Last modified Sun Apr 12 05:40:53 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:02:23 JST 2020 by koyamaso
