@@ -5,8 +5,8 @@ CONSTANTS M, N
 
 p | q == \E d \in 1..q : q = p * d
 Divisors(q) == {d \in 1..q : d | q}
-Maximum(S) == CHOOSE x \in S : \A y \in S : x >= y
-GCD(p,q) == Maximum(Divisors(p) \cap Divisors(q))
+Max(S) == CHOOSE x \in S : \A y \in S : x >= y
+GCD(p,q) == Max(Divisors(p) \cap Divisors(q))
 
 (* --algorithm Euclid 
 variables x \in 1..M, y \in 1..N, x0 = x, y0 = y;
@@ -61,5 +61,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Apr 10 20:27:46 JST 2020 by koyamaso
+\* Last modified Sun Apr 12 02:02:00 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:02:23 JST 2020 by koyamaso
