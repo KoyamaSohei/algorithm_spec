@@ -17,13 +17,13 @@ then
   x := y || y := x;
 end if;
 while x # 0 do
-  x := x - y;
   if x < y 
   then
     x := y || y := x;
   end if;
+  x := x - y;
 end while;
-assert x = GCD(xy[1],xy[2]);
+assert y = GCD(xy[1],xy[2]);
 end algorithm; *)
 \* BEGIN TRANSLATION
 VARIABLES xy, x, y, pc
@@ -47,21 +47,22 @@ Lbl_1 == /\ pc = "Lbl_1"
 
 Lbl_2 == /\ pc = "Lbl_2"
          /\ IF x # 0
-               THEN /\ x' = x - y
-                    /\ IF x' < y
-                          THEN /\ pc' = "Lbl_3"
-                          ELSE /\ pc' = "Lbl_2"
-               ELSE /\ Assert(x = GCD(xy[1],xy[2]), 
+               THEN /\ IF x < y
+                          THEN /\ /\ x' = y
+                                  /\ y' = x
+                          ELSE /\ TRUE
+                               /\ UNCHANGED << x, y >>
+                    /\ pc' = "Lbl_3"
+               ELSE /\ Assert(y = GCD(xy[1],xy[2]), 
                               "Failure of assertion at line 26, column 1.")
                     /\ pc' = "Done"
-                    /\ x' = x
-         /\ UNCHANGED << xy, y >>
+                    /\ UNCHANGED << x, y >>
+         /\ xy' = xy
 
 Lbl_3 == /\ pc = "Lbl_3"
-         /\ /\ x' = y
-            /\ y' = x
+         /\ x' = x - y
          /\ pc' = "Lbl_2"
-         /\ xy' = xy
+         /\ UNCHANGED << xy, y >>
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == pc = "Done" /\ UNCHANGED vars
@@ -77,5 +78,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 12 04:05:42 JST 2020 by koyamaso
+\* Last modified Sun Apr 12 04:46:06 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:02:23 JST 2020 by koyamaso
