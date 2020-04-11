@@ -20,10 +20,7 @@ then
 end if;
 b:
 while x # 0 do
-  if x < y 
-  then
-    x := y || y := x;
-  end if;
+  x := y || y := x;
   c:
   x := x % y;
 end while;
@@ -51,11 +48,8 @@ a == /\ pc = "a"
 
 b == /\ pc = "b"
      /\ IF x # 0
-           THEN /\ IF x < y
-                      THEN /\ /\ x' = y
-                              /\ y' = x
-                      ELSE /\ TRUE
-                           /\ UNCHANGED << x, y >>
+           THEN /\ /\ x' = y
+                   /\ y' = x
                 /\ pc' = "c"
            ELSE /\ pc' = "e"
                 /\ UNCHANGED << x, y >>
@@ -68,7 +62,7 @@ c == /\ pc = "c"
 
 e == /\ pc = "e"
      /\ Assert(y = GCD(xy[1],xy[2]), 
-               "Failure of assertion at line 31, column 1.")
+               "Failure of assertion at line 28, column 1.")
      /\ pc' = "Done"
      /\ UNCHANGED << xy, x, y >>
 
@@ -86,5 +80,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 12 05:40:53 JST 2020 by koyamaso
+\* Last modified Sun Apr 12 05:57:07 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:02:23 JST 2020 by koyamaso
