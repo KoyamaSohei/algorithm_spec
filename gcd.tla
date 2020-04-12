@@ -1,31 +1,38 @@
 -------------------------------- MODULE gcd --------------------------------
-EXTENDS Naturals,TLC
+EXTENDS Integers,TLC
 
 CONSTANTS N
 
-p | q == \E d \in 1..q : q = p * d
-Divisors(q) == {d \in 1..q : d | q}
 Max(S) == CHOOSE x \in S : \A y \in S : x >= y
-GCD(p,q) == IF p = 0 \/ q = 0 THEN 0 ELSE Max(Divisors(p) \cap Divisors(q))
-Input == {<<x,y>> \in (0..N) \X (0..N) : x+y>0}
+Abs(p) == IF p < 0 THEN -p ELSE p
+Gcd(p,q) == Max({x \in 1..N : p % x = 0 /\ q % x = 0})
+Input == {<<x,y>> \in (-N..N) \X (-N..N) : x#0\/y#0 }
 
 (* --algorithm Euclid 
 variables xy \in Input,x=xy[1],y=xy[2];
 begin
 a:
-if x=0 \/ y=0 
-then 
-  y := 0;
-  goto e
-end if;
+x := Abs(x);
+y := Abs(y);
 b:
+if y = 0
+then
+  y := x;
+  goto f;
+end if;
+c:
+if x = 0
+then 
+  goto f;
+end if;
+d:
 while x # 0 do
   x := y || y := x;
-  c:
+  e:
   x := x % y;
 end while;
-e:
-assert y = GCD(xy[1],xy[2]);
+f:
+assert y = Gcd(xy[1],xy[2]);
 end algorithm; *)
 \* BEGIN TRANSLATION
 VARIABLES xy, x, y, pc
@@ -39,37 +46,49 @@ Init == (* Global variables *)
         /\ pc = "a"
 
 a == /\ pc = "a"
-     /\ IF x=0 \/ y=0
-           THEN /\ y' = 0
-                /\ pc' = "e"
-           ELSE /\ pc' = "b"
+     /\ x' = Abs(x)
+     /\ y' = Abs(y)
+     /\ pc' = "b"
+     /\ xy' = xy
+
+b == /\ pc = "b"
+     /\ IF y = 0
+           THEN /\ y' = x
+                /\ pc' = "f"
+           ELSE /\ pc' = "c"
                 /\ y' = y
      /\ UNCHANGED << xy, x >>
 
-b == /\ pc = "b"
+c == /\ pc = "c"
+     /\ IF x = 0
+           THEN /\ pc' = "f"
+           ELSE /\ pc' = "d"
+     /\ UNCHANGED << xy, x, y >>
+
+d == /\ pc = "d"
      /\ IF x # 0
            THEN /\ /\ x' = y
                    /\ y' = x
-                /\ pc' = "c"
-           ELSE /\ pc' = "e"
+                /\ pc' = "e"
+           ELSE /\ pc' = "f"
                 /\ UNCHANGED << x, y >>
      /\ xy' = xy
 
-c == /\ pc = "c"
+e == /\ pc = "e"
      /\ x' = x % y
-     /\ pc' = "b"
+     /\ pc' = "d"
      /\ UNCHANGED << xy, y >>
 
-e == /\ pc = "e"
-     /\ Assert(y = GCD(xy[1],xy[2]), 
-               "Failure of assertion at line 28, column 1.")
+f == /\ pc = "f"
+     /\ Assert(y = Gcd(xy[1],xy[2]), 
+               "Failure of assertion at line 35, column 1.")
      /\ pc' = "Done"
      /\ UNCHANGED << xy, x, y >>
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == pc = "Done" /\ UNCHANGED vars
 
-Next == a \/ b \/ c \/ e
+Next == a \/ b \/ c \/ d \/ e \/ f
            \/ Terminating
 
 Spec == Init /\ [][Next]_vars
@@ -80,5 +99,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sun Apr 12 05:57:07 JST 2020 by koyamaso
+\* Last modified Sun Apr 12 07:19:57 JST 2020 by koyamaso
 \* Created Fri Apr 10 20:02:23 JST 2020 by koyamaso
