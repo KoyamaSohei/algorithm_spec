@@ -57,6 +57,8 @@ while times > 0 do
   push(x);
   e:
   push(x);
+  f:
+  assert Sorted(deque)
 end while;
 end algorithm *)
 \* BEGIN TRANSLATION
@@ -101,13 +103,18 @@ d == /\ pc = "d"
 e == /\ pc = "e"
      /\ \/ /\ deque' = Append(deque,(x+cost))
         \/ /\ deque' = <<x>> \o deque
-     /\ pc' = "b"
+     /\ pc' = "f"
      /\ UNCHANGED << cost, times, x >>
+
+f == /\ pc = "f"
+     /\ Assert(Sorted(deque), "Failure of assertion at line 61, column 3.")
+     /\ pc' = "b"
+     /\ UNCHANGED << deque, cost, times, x >>
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
 Terminating == pc = "Done" /\ UNCHANGED vars
 
-Next == a \/ b \/ c \/ d \/ e
+Next == a \/ b \/ c \/ d \/ e \/ f
            \/ Terminating
 
 Spec == Init /\ [][Next]_vars
@@ -118,5 +125,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sat May 02 16:11:11 JST 2020 by koyamaso
+\* Last modified Sat May 02 16:59:19 JST 2020 by koyamaso
 \* Created Sat May 02 13:14:20 JST 2020 by koyamaso
