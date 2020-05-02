@@ -29,7 +29,7 @@ begin
   t := <<x>> \o t;
 end macro;
 
-macro succ() 
+macro pop() 
 begin 
 deque := Tail(deque);
 end macro;
@@ -50,7 +50,7 @@ b:
 while times > 0 do
   times := times-1;
   x := Head(deque);
-  succ();
+  pop();
   c:
   push(x);
   d:
@@ -118,5 +118,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sat May 02 16:04:46 JST 2020 by koyamaso
+\* Last modified Sat May 02 16:11:11 JST 2020 by koyamaso
 \* Created Sat May 02 13:14:20 JST 2020 by koyamaso
