@@ -6,7 +6,7 @@ RECURSIVE Min(_)
 RECURSIVE Sorted(_)
 
 (*
-If edge cost is 0 or a(>0), 
+If All edge cost is 0 or a(>0), 
 We can use deque when Dijkstra's algorithm do, instead of priority queue. 
 This order is O(E+V),(usually Dijkstra's algorithm is O((E+V)log(E+V)) ).
 We'll make sure deque is always sorted.
@@ -125,5 +125,5 @@ Termination == <>(pc = "Done")
 
 =============================================================================
 \* Modification History
-\* Last modified Sat May 02 16:59:19 JST 2020 by koyamaso
+\* Last modified Sat May 02 17:11:48 JST 2020 by koyamaso
 \* Created Sat May 02 13:14:20 JST 2020 by koyamaso
